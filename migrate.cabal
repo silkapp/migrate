@@ -15,7 +15,9 @@ Library
   HS-Source-Dirs:   src
 
   Build-Depends:    base == 4.*
+                  , binary == 0.5.*
                   , fclabels ==0.11.*
 
   Exposed-modules:  Migrate
+                    Data.Binary.Versioned
 

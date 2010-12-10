@@ -1,0 +1,61 @@
+{-# LANGUAGE
+    FlexibleContexts
+  , FlexibleInstances
+  , MultiParamTypeClasses
+  , ScopedTypeVariables
+  , TypeFamilies
+  , TypeOperators
+  , UndecidableInstances
+  , Rank2Types
+  , TypeSynonymInstances
+  #-}
+module Data.Binary.Versioned
+( putVersioned
+, getVersioned
+)
+where
+
+import Migrate
+import Control.Applicative
+import Control.Exception
+import Data.Record.Label
+import Data.Binary
+import Data.Binary.Get (lookAhead)
+
+class GetVersioned a r where
+  getVersioned' :: Proxy a -> Get r
+
+-- If there is no previous version, we can't do anything.
+
+instance GetVersioned Nothing r where
+  getVersioned' _ = throw NoPreviousVersion
+
+-- We try to get the 'a', which is PrevVersion r. If that doesn't work, we
+-- recurse trying to get older versions of 'a'. Finally, we migrate the 'a' to
+-- an 'r'.
+
+instance ( a ~ Versioned o
+         , Binary o
+         , Migrate a r
+         , VersionNumber (PrevVersion a)
+         , GetVersioned (PrevVersion a) a
+         ) => GetVersioned (Just a) r where
+  getVersioned' _ =
+    do let v = version (Proxy :: Proxy a)
+       w <- lookAhead get
+       migrate <$>
+         case compare w v of
+           LT -> getVersioned' (Proxy :: Proxy (PrevVersion a)) :: Get a
+           EQ -> do (_ :: Int) <- get
+                    Versioned <$> get
+           GT -> throw (VersionMismatch v w)
+
+putVersioned :: forall a o. (a ~ Versioned o, Binary o, VersionNumber (PrevVersion a)) => a -> Put
+putVersioned a =
+  do let v = version (Proxy :: Proxy a)
+     put v
+     put (getL versioned a)
+
+getVersioned :: forall o a. (a ~ Versioned o, Binary o, VersionNumber (PrevVersion a), GetVersioned (PrevVersion a) a) => Get a
+getVersioned = getVersioned' (Proxy :: Proxy (Just a))
+

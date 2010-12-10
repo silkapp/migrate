@@ -1,0 +1,21 @@
+Name:               migrate
+Version:            0.0.1
+Description:        Generic migration/versioning tools.
+Synopsis:           Generic migration/versioning tools.
+Cabal-version:      >= 1.8
+Category:           Network, Web
+Author:             Sebastiaan Visser
+Maintainer:         code@typlab.com
+License:            OtherLicense
+License-File:       LICENSE
+Build-Type:         Simple
+
+Library
+  GHC-Options:      -Wall
+  HS-Source-Dirs:   src
+
+  Build-Depends:    base == 4.*
+                  , fclabels ==0.11.*
+
+  Exposed-modules:  Migrate
+

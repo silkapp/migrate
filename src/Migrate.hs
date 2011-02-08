@@ -1,14 +1,15 @@
 {-# LANGUAGE
     DeriveDataTypeable
+  , DeriveFunctor
   , EmptyDataDecls
   , FlexibleContexts
   , FlexibleInstances
   , MultiParamTypeClasses
   , ScopedTypeVariables
+  , TemplateHaskell
   , TypeFamilies
   , TypeOperators
   , UndecidableInstances
-  , TemplateHaskell
   #-}
 module Migrate where
 
@@ -62,7 +63,7 @@ instance VersionNumber (PrevVersion a) => VersionNumber (Just a) where
   version' _ = 1 + version' (Proxy :: Proxy (PrevVersion a))
 
 newtype Versioned a = Versioned { _versioned :: a }
-  deriving (Eq, Ord, Read, Show)
+  deriving (Eq, Ord, Read, Show, Functor)
 
 $(mkLabels [''Versioned])
 

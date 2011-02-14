@@ -1,6 +1,8 @@
 {-# LANGUAGE
     DeriveDataTypeable
+  , DeriveFoldable
   , DeriveFunctor
+  , DeriveTraversable
   , EmptyDataDecls
   , FlexibleContexts
   , FlexibleInstances
@@ -14,7 +16,9 @@
 module Migrate where
 
 import Control.Exception
+import Data.Foldable
 import Data.Record.Label
+import Data.Traversable
 import Data.Typeable
 
 -- Maybe lifted to the type level.
@@ -63,7 +67,7 @@ instance VersionNumber (PrevVersion a) => VersionNumber (Just a) where
   version' _ = 1 + version' (Proxy :: Proxy (PrevVersion a))
 
 newtype Versioned a = Versioned { _versioned :: a }
-  deriving (Eq, Ord, Read, Show, Functor)
+  deriving (Eq, Ord, Read, Show, Functor, Foldable, Traversable)
 
 $(mkLabels [''Versioned])
 

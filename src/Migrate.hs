@@ -71,3 +71,9 @@ newtype Versioned a = Versioned { _versioned :: a }
 
 $(mkLabels [''Versioned])
 
+data Zero
+data Suc n
+data FixedVersion n
+
+type instance PrevVersion (FixedVersion Zero) = Nothing
+type instance PrevVersion (FixedVersion (Suc n)) = Just (FixedVersion n)

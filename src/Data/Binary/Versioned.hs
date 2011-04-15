@@ -15,12 +15,12 @@ module Data.Binary.Versioned
 )
 where
 
-import Migrate
 import Control.Applicative
 import Control.Exception
 import Data.Record.Label
 import Data.Binary
 import Data.Binary.Get (lookAhead)
+import Migrate
 
 class GetVersioned a r where
   getVersioned' :: Proxy a -> Get r
@@ -39,7 +39,7 @@ instance ( a ~ Versioned o
          , Migrate a r
          , VersionNumber (PrevVersion a)
          , GetVersioned (PrevVersion a) a
-         ) => GetVersioned (Just a) r where
+         ) => GetVersioned (Just (Versioned o)) r where
   getVersioned' _ =
     do let v = version (Proxy :: Proxy a)
        w <- lookAhead get
@@ -49,6 +49,9 @@ instance ( a ~ Versioned o
            EQ -> do (_ :: Int) <- get
                     Versioned <$> get
            GT -> throw (VersionMismatch v w)
+
+instance GetVersioned (Just (FixedVersion n)) r where
+  getVersioned' _ = error "GetVersioned: FixedVersion found instead of previous version."
 
 putVersioned :: forall a o. (a ~ Versioned o, Binary o, VersionNumber (PrevVersion a)) => a -> Put
 putVersioned a =

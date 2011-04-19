@@ -17,7 +17,7 @@ module Migrate where
 
 import Control.Exception
 import Data.Foldable
-import Data.Record.Label
+import Data.Label
 import Data.Traversable
 import Data.Typeable
 

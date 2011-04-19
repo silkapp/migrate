@@ -17,10 +17,10 @@ where
 
 import Control.Applicative
 import Control.Exception
-import Data.Record.Label
 import Data.Binary
 import Data.Binary.Get (lookAhead)
 import Migrate
+import qualified Data.Label as L
 
 class GetVersioned a r where
   getVersioned' :: Proxy a -> Get r
@@ -57,7 +57,7 @@ putVersioned :: forall a o. (a ~ Versioned o, Binary o, VersionNumber (PrevVersi
 putVersioned a =
   do let v = version (Proxy :: Proxy a)
      put v
-     put (getL versioned a)
+     put (L.get versioned a)
 
 getVersioned :: forall o a. (a ~ Versioned o, Binary o, VersionNumber (PrevVersion a), GetVersioned (PrevVersion a) a) => Get a
 getVersioned = getVersioned' (Proxy :: Proxy (Just a))

@@ -1,5 +1,5 @@
 Name:               migrate
-Version:            0.2
+Version:            0.3
 Description:        Generic migration/versioning tools.
 Synopsis:           Generic migration/versioning tools.
 Cabal-version:      >= 1.8
@@ -17,6 +17,7 @@ Library
   Build-Depends:    base == 4.*
                   , binary == 0.5.*
                   , fclabels ==0.14.*
+                  , deepseq ==1.1.*
 
   Exposed-modules:  Migrate
                     Data.Binary.Versioned

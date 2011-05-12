@@ -6,6 +6,7 @@
   , EmptyDataDecls
   , FlexibleContexts
   , FlexibleInstances
+  , GeneralizedNewtypeDeriving
   , MultiParamTypeClasses
   , ScopedTypeVariables
   , TemplateHaskell
@@ -16,9 +17,6 @@
 module Migrate where
 
 import Control.Exception
-import Data.Foldable
-import Data.Label
-import Data.Traversable
 import Data.Typeable
 
 -- Maybe lifted to the type level.
@@ -66,14 +64,10 @@ instance VersionNumber Nothing where
 instance VersionNumber (PrevVersion a) => VersionNumber (Just a) where
   version' _ = 1 + version' (Proxy :: Proxy (PrevVersion a))
 
-newtype Versioned a = Versioned { _versioned :: a }
-  deriving (Eq, Ord, Read, Show, Functor, Foldable, Traversable)
-
-$(mkLabels [''Versioned])
-
 data Zero
 data Suc n
 data FixedVersion n
 
-type instance PrevVersion (FixedVersion Zero) = Nothing
+type instance PrevVersion (FixedVersion Zero)    = Nothing
 type instance PrevVersion (FixedVersion (Suc n)) = Just (FixedVersion n)
+

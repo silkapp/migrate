@@ -1,18 +1,19 @@
 {-# LANGUAGE
-    FlexibleContexts
-  , FlexibleInstances
-  , MultiParamTypeClasses
+    DeriveDataTypeable
   , DeriveFoldable
   , DeriveFunctor
   , DeriveTraversable
-  , TemplateHaskell
+  , FlexibleContexts
+  , FlexibleInstances
+  , GeneralizedNewtypeDeriving
+  , MultiParamTypeClasses
+  , Rank2Types
   , ScopedTypeVariables
+  , TemplateHaskell
   , TypeFamilies
   , TypeOperators
-  , UndecidableInstances
-  , Rank2Types
   , TypeSynonymInstances
-  , GeneralizedNewtypeDeriving
+  , UndecidableInstances
   #-}
 module Data.Binary.Versioned
 ( Versioned (..)
@@ -28,11 +29,22 @@ import Data.Binary
 import Data.Binary.Get (lookAhead)
 import Data.Foldable
 import Data.Traversable
+import Data.Generics (Data, Typeable)
 import Migrate
+
 import qualified Data.Label as L
 
 newtype Versioned a = Versioned { _versioned :: a }
-  deriving (Eq, Ord, Read, Show, Functor, Foldable, Traversable)
+  deriving ( Eq
+           , Ord
+           , Read
+           , Show
+           , Functor
+           , Foldable
+           , Traversable
+           , Data
+           , Typeable
+           )
 
 $(L.mkLabels [''Versioned])
 

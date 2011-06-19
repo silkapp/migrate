@@ -1,5 +1,5 @@
 Name:               migrate
-Version:            0.3
+Version:            0.4
 Description:        Generic migration/versioning tools.
 Synopsis:           Generic migration/versioning tools.
 Cabal-version:      >= 1.8
@@ -14,10 +14,12 @@ Library
   GHC-Options:      -Wall
   HS-Source-Dirs:   src
 
-  Build-Depends:    base == 4.*
-                  , binary == 0.5.*
-                  , fclabels ==0.14.*
-                  , deepseq ==1.1.*
+  Build-Depends:
+      base     == 4.*
+    , binary   == 0.5.*
+    , fclabels ==0.14.*
+    , deepseq  == 1.1.*
+    , syb      == 0.3.*
 
   Exposed-modules:  Migrate
                     Data.Binary.Versioned

@@ -18,6 +18,7 @@ Library
       base     == 4.*
     , binary   == 0.5.*
     , fclabels == 1.0.*
+    , fclabels >= 1.0 && < 1.2
     , syb      == 0.3.*
   Exposed-modules:  Migrate
                     Data.Binary.Versioned

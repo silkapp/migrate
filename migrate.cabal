@@ -4,8 +4,8 @@ Description:        Generic migration/versioning tools.
 Synopsis:           Generic migration/versioning tools.
 Cabal-version:      >= 1.8
 Category:           Network, Web
-Author:             Sebastiaan Visser
-Maintainer:         code@typlab.com
+Author:             Silk
+Maintainer:         code@silkapp.com
 License:            OtherLicense
 License-File:       LICENSE
 Build-Type:         Simple

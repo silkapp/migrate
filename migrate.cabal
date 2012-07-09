@@ -17,7 +17,6 @@ Library
   Build-Depends:
       base     == 4.*
     , binary   == 0.5.*
-    , fclabels == 1.0.*
     , fclabels >= 1.0 && < 1.2
     , json     == 0.5.*
     , syb      == 0.3.*

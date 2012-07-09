@@ -22,4 +22,5 @@ Library
     , syb      == 0.3.*
   Exposed-modules:  Migrate
                     Data.Binary.Versioned
+                    Data.Versioned
 

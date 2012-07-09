@@ -1,23 +1,17 @@
 {-# LANGUAGE
-    DeriveDataTypeable
-  , DeriveFoldable
-  , DeriveFunctor
-  , DeriveTraversable
-  , FlexibleContexts
+    FlexibleContexts
   , FlexibleInstances
   , GeneralizedNewtypeDeriving
   , MultiParamTypeClasses
   , Rank2Types
   , ScopedTypeVariables
-  , TemplateHaskell
   , TypeFamilies
   , TypeOperators
   , TypeSynonymInstances
   , UndecidableInstances
   #-}
 module Data.Binary.Versioned
-( Versioned (..)
-, versioned
+( module Data.Versioned
 , putVersioned
 , getVersioned
 )
@@ -27,26 +21,11 @@ import Control.Applicative
 import Control.Exception
 import Data.Binary
 import Data.Binary.Get (lookAhead)
-import Data.Foldable
-import Data.Traversable
-import Data.Generics (Data, Typeable)
 import Migrate
 
 import qualified Data.Label as L
 
-newtype Versioned a = Versioned { _versioned :: a }
-  deriving ( Eq
-           , Ord
-           , Read
-           , Show
-           , Functor
-           , Foldable
-           , Traversable
-           , Data
-           , Typeable
-           )
-
-$(L.mkLabels [''Versioned])
+import Data.Versioned
 
 class GetVersioned a r where
   getVersioned' :: Proxy a -> Get r

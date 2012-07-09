@@ -8,12 +8,17 @@
   #-}
 module Test where
 
-import Data.Binary
+import Data.Binary (Binary (..))
 import Generics.Regular
+import Generics.Regular.JSON
+import Text.JSON (JSON (..))
+import qualified Text.JSON   as JSON
+import qualified Data.Binary as Binary
 import qualified Generics.Regular.Functions.Binary as G
 
-import Migrate
 import Data.Binary.Versioned
+import Migrate
+import Text.JSON.Versioned
 
 -------------------------------------------------------------------------------
 
@@ -29,11 +34,19 @@ instance Binary User0' where
   get = G.gget
   put = G.gput
 
+instance JSON User0' where
+  showJSON = gshowJSON
+  readJSON = greadJSON
+
 type User0 = Versioned User0'
 
 instance Binary User0 where
   get = getVersioned
   put = putVersioned
+
+instance JSON User0 where
+  showJSON = showJSONVersioned
+  readJSON = readJSONVersioned
 
 type instance PrevVersion User0 = Nothing
 
@@ -52,11 +65,19 @@ instance Binary User1' where
   get = G.gget
   put = G.gput
 
+instance JSON User1' where
+  showJSON = gshowJSON
+  readJSON = greadJSON
+
 type User1 = Versioned User1'
 
 instance Binary User1 where
   get = getVersioned
   put = putVersioned
+
+instance JSON User1 where
+  showJSON = showJSONVersioned
+  readJSON = readJSONVersioned
 
 type instance PrevVersion User1 = Just User0
 instance Migrate User0 User1 where
@@ -68,8 +89,8 @@ instance Migrate User0 User1 where
 
 -------------------------------------------------------------------------------
 
-newtype Name = Name String deriving (Eq, Show, Binary)
-newtype Password = Password String deriving (Eq, Show, Binary)
+newtype Name = Name String deriving (Eq, Show, Binary, JSON)
+newtype Password = Password String deriving (Eq, Show, Binary, JSON)
 data Role = NormalUser | PowerUser | Admin deriving (Eq, Show)
 
 $(deriveAll ''Role "PFRole")
@@ -78,6 +99,10 @@ type instance PF Role = PFRole
 instance Binary Role where
   get = G.gget
   put = G.gput
+
+instance JSON Role where
+  showJSON = gshowJSON
+  readJSON = greadJSON
 
 data User2' = User2
   { name2     :: Name
@@ -92,11 +117,19 @@ instance Binary User2' where
   get = G.gget
   put = G.gput
 
+instance JSON User2' where
+  showJSON = gshowJSON
+  readJSON = greadJSON
+
 type User2 = Versioned User2'
 
 instance Binary User2 where
   get = getVersioned
   put = putVersioned
+
+instance JSON User2 where
+  showJSON = showJSONVersioned
+  readJSON = readJSONVersioned
 
 type instance PrevVersion User2 = Just User1
 instance Migrate User1 User2 where
@@ -123,11 +156,14 @@ user2  = Versioned $ User2 { name2 = Name "Erik Hesselink", password2 = Password
 user2_ :: Versioned User2'
 user2_ = Versioned $ User2 { name2 = Name "Erik Hesselink", password2 = Password "password", role2 = Admin }
 
-tests :: (Bool, Bool, Bool, Bool)
-tests = (test0, test1, test2, test3)
-  where
-    test0 = decode (encode user0) == user1
-    test1 = decode (encode user0) == user2
-    test2 = decode (encode user1) == user2
-    test3 = decode (encode user1_) == user2_
-
+tests :: [Bool]
+tests =
+  [ Binary.decode (Binary.encode user0)  == user1
+  , Binary.decode (Binary.encode user0)  == user2
+  , Binary.decode (Binary.encode user1)  == user2
+  , Binary.decode (Binary.encode user1_) == user2_
+  , JSON.decode (JSON.encode user0)  == JSON.Ok user1
+  , JSON.decode (JSON.encode user0)  == JSON.Ok user2
+  , JSON.decode (JSON.encode user1)  == JSON.Ok user2
+  , JSON.decode (JSON.encode user1_) == JSON.Ok user2_
+  ]

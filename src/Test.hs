@@ -1,12 +1,10 @@
 {-# LANGUAGE
     TemplateHaskell
   , GeneralizedNewtypeDeriving
-  , OverloadedStrings
   , EmptyDataDecls
   , TypeSynonymInstances
   , MultiParamTypeClasses
   , TypeFamilies
-  , StandaloneDeriving
   #-}
 module Test where
 

@@ -1,3 +1,4 @@
+{-# OPTION_GHC -fno-warn-orphans #-}
 {-# LANGUAGE
     FlexibleContexts
   , FlexibleInstances

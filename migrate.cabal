@@ -1,5 +1,5 @@
 Name:               migrate
-Version:            0.5.1
+Version:            0.5.2
 Description:        Generic migration/versioning tools.
 Synopsis:           Generic migration/versioning tools.
 Cabal-version:      >= 1.8

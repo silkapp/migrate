@@ -66,3 +66,7 @@ showJSONVersioned a =
 
 readJSONVersioned :: forall o a. (a ~ Versioned o, JSON o, VersionNumber (PrevVersion a), JSONVersioned (PrevVersion a) a) => JSValue -> Result a
 readJSONVersioned = readJSONVersioned' (Proxy :: Proxy (Just a))
+
+instance (JSON a, VersionNumber (PrevVersion (Versioned a)), JSONVersioned (PrevVersion (Versioned a)) (Versioned a)) => JSON (Versioned a) where
+  showJSON = showJSONVersioned
+  readJSON = readJSONVersioned

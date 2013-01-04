@@ -9,6 +9,7 @@
   , TypeOperators
   , TypeSynonymInstances
   , UndecidableInstances
+  , CPP
   #-}
 module Data.Binary.Versioned
 ( module Data.Versioned
@@ -20,7 +21,9 @@ where
 import Control.Applicative
 import Control.Exception
 import Data.Binary
+#if !MIN_VERSION_binary(0,6,0)
 import Data.Binary.Get (lookAhead)
+#endif
 import Migrate
 
 import qualified Data.Label as L
@@ -46,6 +49,19 @@ instance ( a ~ Versioned o
          , GetVersioned (PrevVersion a) a
          ) => GetVersioned (Just (Versioned o)) r where
   getVersioned' _ =
+#if MIN_VERSION_binary(0,6,0)
+    let v = version (Proxy :: Proxy a)
+        getCurrent :: Get a
+        getCurrent =
+          do w <- get
+             case compare w v of
+               LT -> empty
+               EQ -> Versioned <$> get
+               GT -> throw (VersionMismatch v w)
+        getOlder :: Get a
+        getOlder = getVersioned' (Proxy :: Proxy (PrevVersion a)) :: Get a
+    in migrate <$> (getCurrent <|> getOlder)
+#else
     do let v = version (Proxy :: Proxy a)
        w <- lookAhead get
        migrate <$>
@@ -54,6 +70,7 @@ instance ( a ~ Versioned o
            EQ -> do (_ :: Int) <- get
                     Versioned <$> get
            GT -> throw (VersionMismatch v w)
+#endif
 
 instance GetVersioned (Just (FixedVersion n)) r where
   getVersioned' _ = error "GetVersioned: FixedVersion found instead of previous version."

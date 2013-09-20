@@ -19,7 +19,7 @@ Library
     , binary   >= 0.5 && < 0.7
     , fclabels >= 1.0 && < 1.2
     , json     >= 0.5 && < 0.8
-    , syb      == 0.3.*
+    , syb      >= 0.3 && < 0.5
   Exposed-modules:  Migrate
                     Data.Binary.Versioned
                     Data.Versioned

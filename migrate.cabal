@@ -16,7 +16,7 @@ Library
   Build-Depends:
       base     == 4.*
     , binary   >= 0.5 && < 0.7
-    , fclabels >= 1.0 && < 1.2
+    , fclabels >= 1.0 && < 2.1
     , json     >= 0.5 && < 0.8
     , syb      >= 0.3 && < 0.5
   Exposed-modules:  Migrate

@@ -5,7 +5,7 @@ Synopsis:           Generic migration/versioning tools.
 Cabal-version:      >= 1.8
 Category:           Network, Web
 Author:             Silk
-Maintainer:         code@silkapp.com
+Maintainer:         code@silk.co
 License:            OtherLicense
 Build-Type:         Simple
 

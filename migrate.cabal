@@ -6,7 +6,8 @@ Cabal-version:      >= 1.8
 Category:           Network, Web
 Author:             Silk
 Maintainer:         code@silk.co
-License:            OtherLicense
+License:            BSD3
+License-File:       LICENSE
 Build-Type:         Simple
 
 Library
